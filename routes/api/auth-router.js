@@ -8,6 +8,7 @@ import {
 } from "../../middlewares/index.js";
 import { validateBody } from "../../decorators/index.js";
 import {
+  userEmailSchema,
   userLoginSchema,
   userRegisterSchema,
   userSubscriptionUpdate,
@@ -16,6 +17,7 @@ import {
 const userRegisterValidate = validateBody(userRegisterSchema);
 const userLoginValidate = validateBody(userLoginSchema);
 const userSubscriptionUpdateValidate = validateBody(userSubscriptionUpdate);
+const userEmailValidate = validateBody(userEmailSchema);
 
 const router = express.Router();
 
@@ -24,6 +26,15 @@ router.post(
   isEmptyBody,
   userRegisterValidate,
   authController.register
+);
+
+router.get("/verify/:verificationToken", authController.verify);
+
+router.post(
+  "/verify",
+  isEmptyBody,
+  userEmailValidate,
+  authController.resendVerifyEmail
 );
 
 router.post("/login", isEmptyBody, userLoginValidate, authController.login);
